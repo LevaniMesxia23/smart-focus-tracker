@@ -56,6 +56,7 @@ export function useFocusTracker() {
       focusMap.current.set(id, {
         ...data,
         focusTime: parseFloat(((data.focusTime + delta) / 1000).toFixed(2)),
+        lastFocused: data.lastFocused,
         _lastFocusedTimestamp: undefined,
       });
     };
@@ -71,10 +72,23 @@ export function useFocusTracker() {
 
   const report = () => {
     const result: Record<string, FocusData> = {};
+    const now = Date.now();
+
     focusMap.current.forEach((val, key) => {
-      const { _lastFocusedTimestamp, ...cleanData } = val;
-      result[key] = cleanData;
+      let focusTime = val.focusTime;
+
+      if (val._lastFocusedTimestamp) {
+        const ongoingTime = (now - val._lastFocusedTimestamp) / 1000;
+        focusTime = parseFloat((focusTime + ongoingTime).toFixed(2));
+      }
+
+      result[key] = {
+        focusTime,
+        focusCount: val.focusCount,
+        lastFocused: val.lastFocused,
+      };
     });
+
     return result;
   };
 
