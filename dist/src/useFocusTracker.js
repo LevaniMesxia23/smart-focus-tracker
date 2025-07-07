@@ -1,4 +1,14 @@
 import { useEffect, useRef } from "react";
+const formatDate = (timestamp) => {
+    const date = new Date(timestamp);
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const seconds = date.getSeconds().toString().padStart(2, "0");
+    return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+};
 export function useFocusTracker() {
     const focusMap = useRef(new Map());
     useEffect(() => {
@@ -12,10 +22,12 @@ export function useFocusTracker() {
                 focusCount: 0,
                 lastFocused: null,
             };
+            const now = Date.now();
             focusMap.current.set(id, {
                 ...existing,
                 focusCount: existing.focusCount + 1,
-                lastFocused: Date.now(),
+                lastFocused: formatDate(now),
+                _lastFocusedTimestamp: now,
             });
         };
         const handleBlur = (e) => {
@@ -24,14 +36,15 @@ export function useFocusTracker() {
             if (!id)
                 return;
             const data = focusMap.current.get(id);
-            if (!data?.lastFocused)
+            if (!data?.lastFocused || !data._lastFocusedTimestamp)
                 return;
             const now = Date.now();
-            const delta = now - data.lastFocused;
+            const delta = now - data._lastFocusedTimestamp;
             focusMap.current.set(id, {
                 ...data,
                 focusTime: data.focusTime + delta,
                 lastFocused: null,
+                _lastFocusedTimestamp: undefined,
             });
         };
         document.addEventListener("focusin", handleFocus);
@@ -44,7 +57,8 @@ export function useFocusTracker() {
     const report = () => {
         const result = {};
         focusMap.current.forEach((val, key) => {
-            result[key] = val;
+            const { _lastFocusedTimestamp, ...cleanData } = val;
+            result[key] = cleanData;
         });
         return result;
     };

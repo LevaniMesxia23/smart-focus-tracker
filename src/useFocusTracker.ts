@@ -1,7 +1,22 @@
 import { useEffect, useRef } from "react";
 import { FocusData } from "./types.js";
 
-type FocusMap = Map<string, FocusData>;
+interface InternalFocusData extends FocusData {
+  _lastFocusedTimestamp?: number;
+}
+
+type FocusMap = Map<string, InternalFocusData>;
+
+const formatDate = (timestamp: number): string => {
+  const date = new Date(timestamp);
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+  const year = date.getFullYear();
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const seconds = date.getSeconds().toString().padStart(2, "0");
+  return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+};
 
 export function useFocusTracker() {
   const focusMap = useRef<FocusMap>(new Map());
@@ -18,10 +33,12 @@ export function useFocusTracker() {
         lastFocused: null,
       };
 
+      const now = Date.now();
       focusMap.current.set(id, {
         ...existing,
         focusCount: existing.focusCount + 1,
-        lastFocused: Date.now(),
+        lastFocused: formatDate(now),
+        _lastFocusedTimestamp: now,
       });
     };
 
@@ -31,15 +48,16 @@ export function useFocusTracker() {
       if (!id) return;
 
       const data = focusMap.current.get(id);
-      if (!data?.lastFocused) return;
+      if (!data?.lastFocused || !data._lastFocusedTimestamp) return;
 
       const now = Date.now();
-      const delta = now - data.lastFocused;
+      const delta = now - data._lastFocusedTimestamp;
 
       focusMap.current.set(id, {
         ...data,
         focusTime: data.focusTime + delta,
         lastFocused: null,
+        _lastFocusedTimestamp: undefined,
       });
     };
 
@@ -55,7 +73,8 @@ export function useFocusTracker() {
   const report = () => {
     const result: Record<string, FocusData> = {};
     focusMap.current.forEach((val, key) => {
-      result[key] = val;
+      const { _lastFocusedTimestamp, ...cleanData } = val;
+      result[key] = cleanData;
     });
     return result;
   };
