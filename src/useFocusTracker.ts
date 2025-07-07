@@ -55,8 +55,7 @@ export function useFocusTracker() {
 
       focusMap.current.set(id, {
         ...data,
-        focusTime: data.focusTime + delta,
-        lastFocused: null,
+        focusTime: parseFloat(((data.focusTime + delta) / 1000).toFixed(2)),
         _lastFocusedTimestamp: undefined,
       });
     };

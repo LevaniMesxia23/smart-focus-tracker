@@ -154,17 +154,17 @@ function CheckoutForm() {
 ```json
 {
   "email": {
-    "focusTime": 2340,
+    "focusTime": 23.40,
     "focusCount": 1,
-    "lastFocused": 1703123456789
+    "lastFocused": 2025-07-07 12:00:00
   },
   "password": {
-    "focusTime": 5670,
+    "focusTime": 0.93,
     "focusCount": 3,
-    "lastFocused": 1703123459123
+    "lastFocused": 2025-03-07 12:31:59
   },
   "confirmPassword": {
-    "focusTime": 8920,
+    "focusTime": 8.92,
     "focusCount": 4,
     "lastFocused": null
   }
@@ -191,12 +191,6 @@ function CheckoutForm() {
 - Identify accessibility pain points for screen reader users
 - Validate form usability across different user segments
 
-## Browser Compatibility
-
-- Chrome 61+
-- Firefox 55+
-- Safari 11+
-- Edge 79+
 
 ## Contributing
 
