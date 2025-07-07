@@ -1,25 +1,47 @@
 {
   "name": "smart-focus-tracker",
   "version": "1.0.1",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test": "node test-import.mjs",
+    "prepublishOnly": "npm run build"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "react",
+    "focus",
+    "tracking",
+    "analytics",
+    "ux",
+    "user-experience",
+    "form-analytics",
+    "hook"
+  ],
+  "author": "Levani Mesxia",
   "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+  "description": "A React hook for tracking focus time and interactions on form elements",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LevaniMesxia23/smart-focus-tracker.git"
   },
+  "bugs": {
+    "url": "https://github.com/LevaniMesxia23/smart-focus-tracker/issues"
+  },
+  "homepage": "https://github.com/LevaniMesxia23/smart-focus-tracker#readme",
+  "dependencies": {},
   "devDependencies": {
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
   }
 }

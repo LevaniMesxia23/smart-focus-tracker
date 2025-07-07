@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { FocusData } from "./types";
+import { FocusData } from "./types.js";
 
 type FocusMap = Map<string, FocusData>;
 
@@ -15,13 +15,13 @@ export function useFocusTracker() {
       const existing = focusMap.current.get(id) || {
         focusTime: 0,
         focusCount: 0,
-        lastFocused: null
+        lastFocused: null,
       };
 
       focusMap.current.set(id, {
         ...existing,
         focusCount: existing.focusCount + 1,
-        lastFocused: Date.now()
+        lastFocused: Date.now(),
       });
     };
 
@@ -39,7 +39,7 @@ export function useFocusTracker() {
       focusMap.current.set(id, {
         ...data,
         focusTime: data.focusTime + delta,
-        lastFocused: null
+        lastFocused: null,
       });
     };
 

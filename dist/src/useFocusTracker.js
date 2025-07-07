@@ -10,9 +10,13 @@ export function useFocusTracker() {
             const existing = focusMap.current.get(id) || {
                 focusTime: 0,
                 focusCount: 0,
-                lastFocused: null
+                lastFocused: null,
             };
-            focusMap.current.set(id, Object.assign(Object.assign({}, existing), { focusCount: existing.focusCount + 1, lastFocused: Date.now() }));
+            focusMap.current.set(id, {
+                ...existing,
+                focusCount: existing.focusCount + 1,
+                lastFocused: Date.now(),
+            });
         };
         const handleBlur = (e) => {
             const el = e.target;
@@ -20,11 +24,15 @@ export function useFocusTracker() {
             if (!id)
                 return;
             const data = focusMap.current.get(id);
-            if (!(data === null || data === void 0 ? void 0 : data.lastFocused))
+            if (!data?.lastFocused)
                 return;
             const now = Date.now();
             const delta = now - data.lastFocused;
-            focusMap.current.set(id, Object.assign(Object.assign({}, data), { focusTime: data.focusTime + delta, lastFocused: null }));
+            focusMap.current.set(id, {
+                ...data,
+                focusTime: data.focusTime + delta,
+                lastFocused: null,
+            });
         };
         document.addEventListener("focusin", handleFocus);
         document.addEventListener("focusout", handleBlur);
